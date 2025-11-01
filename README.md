@@ -175,3 +175,6 @@ If you find this repo useful, please cite the following paper.
 
 For any issues, please contact Mr. Tang Chen via email tangc@hdu.edu.cn
 
+## Acknowledgement
+
+We would like to thank the authors of [SegFormer] (https://github.com/NVlabs/SegFormer), which has significantly accelerated the development of our Method.
