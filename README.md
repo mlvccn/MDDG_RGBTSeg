@@ -32,107 +32,111 @@ For training, download the MFNet dataset from [here](https://github.com/haqishen
 ## Folder Structure
 While training, the models are saved in a folder specifying the hyper-parameters for that run under the [exp](exp) directory, including the .pth file and the .log file. The directory structure looks like this:
 ```
-TriKD_SemiSeg
-│
+MDDG
 ├─configs
-│      cityscapes_triple11m_512_e300.yaml
-│      cityscapes_triple21m_512_e300.yaml
-│      eval.yaml
-│
-├─dataset
-│      semi.py
-│      transform.py
+│      mf_rgbt.yaml
 │
 ├─exp
-│      exp_log.txt
+│      exp.txt
 │
-├─model
-│  │  helpers.py
-│  │  resnet101.pth
-│  │  resnet50.pth
+├─semseg
+│  │  augmentations.py
+│  │  augmentations_mm.py
+│  │  losses.py
+│  │  metrics.py
+│  │  optimizers.py
+│  │  schedulers.py
+│  │  __init__.py
 │  │
-│  ├─backbone
-│  │      resnet.py
-│  │      tinyvit_kd.py
-│  │      vit_kd.py
-│  │      xception.py
+│  ├─datasets
+│  │      MF.py
+│  │      __init__.py
 │  │
-│  └─semseg
-│          decoder.py
-│          deeplabv3plus.py
-│          fft_attn.py
-│          model_helper_kd.py
-│          neck.py
+│  ├─models
+│  │  │  base.py
+│  │  │  MDDG.py
+│  │  │  __init__.py
+│  │  │
+│  │  ├─backbones
+│  │  │      MDDG.py
+│  │  │      __init__.py
+│  │  │
+│  │  ├─heads
+│  │  │      Dynamics_Head.py
+│  │  │      segformer.py
+│  │  │      __init__.py
+│  │  │
+│  │  └─layers
+│  │      │  common.py
+│  │      │  initialize.py
+│  │      │  MultiModality_CA.py
+│  │      │  VMamba.py
+│  │      │  __init__.py
+│  │      │
+│  │      └─selective_scan
+│  │          │  readme.md
+│  │          │  setup.py
+│  │          │  test_selective_scan.py
+│  │          │
+│  │          ├─csrc
+│  │          │  └─selective_scan
+│  │          │          reverse_scan.cuh
+│  │          │          selective_scan.cpp
+│  │          │          selective_scan.h
+│  │          │          selective_scan_bwd_kernel.cuh
+│  │          │          selective_scan_common.h
+│  │          │          selective_scan_core.cu
+│  │          │          selective_scan_core_fwd2.cu
+│  │          │          selective_scan_core_fwd3.cu
+│  │          │          selective_scan_core_fwd4.cu
+│  │          │          selective_scan_fwd_kernel.cuh
+│  │          │          static_switch.h
+│  │          │          uninitialized_copy.cuh
+│  │          │
+│  │          └─selective_scan
+│  │                  selective_scan_interface.py
+│  │                  __init__.py
+│  │
+│  └─utils
+│          utils.py
+│          visualize.py
+│          __init__.py
 │
-├─pretrained
-│      pretrained model.txt
-│
-├─scripts
-│      eval.sh
-│      train_TriKD_autocast.sh
-│
-├─splits
-│  └─cityscapes
-│      │  eval.txt
-│      │  val.txt
-│      │
-│      ├─1_16
-│      │      labeled.txt
-│      │      unlabeled.txt
-│      │
-│      ├─1_2
-│      │      labeled.txt
-│      │      unlabeled.txt
-│      │
-│      ├─1_30
-│      │      labeled.txt
-│      │      unlabeled.txt
-│      │
-│      ├─1_4
-│      │      labeled.txt
-│      │      unlabeled.txt
-│      │
-│      └─1_8
-│              labeled.txt
-│              unlabeled.txt
-│
-├─util
-│        classes.py
-│        dist_helper.py
-│        eval_helper.py
-│        ohem.py
-│        utils.py
-│  eval.py
-│  readme.md
-│  requirements.txt
-│  semi_TriKD_autocast.py
-└─ TriKD.png
+└─tools
+        infer_mm.py
+        test_context.py
+        test_na2d.py
+        train.sh
+        train_ddp.py
+        train_ddp.sh
+        train_mm.py
+        val_mm.py
 ```
 
 <br/>
 
-## Quantitative results on Cityscapes
+## Quantitative results on MF-Data
 <table>
    <tr>
       <td>Model</td>
-      <td>1/16</td>
-      <td>1/8</td>
-      <td>1/4</td>
-      <td>1/2</td> 
+      <td>mIoU</td>
+      <td>mAcc</td>
+      <td>GFlops</td>
+      <td>Params</td>  
    </tr>
    <tr>
-      <td>TriVN 11M</td>
-      <td>69.18</td>
-      <td>73.25</td>
-      <td>75.02</td>
-      <td>75.98</td>
+      <td>MDDG-B2</td>
+      <td>61.7</td>
+      <td>76.9</td>
+      <td>65.7</td>
+      <td>56.8</td>
    </tr>
    <tr>
-      <td>TriVN 21M</td>
-      <td>72.70</td>
-      <td>76.44</td>
-      <td>78.01</td>
-      <td>79.12</td>
+      <td>MDDG-B4</td>
+      <td>62.4</td>
+      <td>77.4</td>
+      <td>99.5</td>
+      <td>93.4</td>
    </tr>
 </table>
 
